@@ -17,13 +17,23 @@ import {
 } from "@/components/ui/input-group"
 import { SearchIcon, CheckIcon } from "lucide-react"
 
+// cmdk's default filter does fuzzy subsequence scoring, which can rank a
+// literal substring match (e.g. "cur" in "Currency Converter") below loosely
+// related items, making it appear to "not show up" for short queries. Plain
+// case-insensitive substring matching is more predictable for a tool list.
+function substringFilter(value: string, search: string): number {
+  return value.toLowerCase().includes(search.toLowerCase()) ? 1 : 0
+}
+
 function Command({
   className,
+  filter = substringFilter,
   ...props
 }: React.ComponentProps<typeof CommandPrimitive>) {
   return (
     <CommandPrimitive
       data-slot="command"
+      filter={filter}
       className={cn(
         "flex size-full flex-col overflow-hidden rounded-xl! bg-popover p-1 text-popover-foreground",
         className
