@@ -10,8 +10,7 @@ export const metadata: Metadata = buildMetadata({
   path: "/contact",
 });
 
-// Replace with a real inbox before launch.
-const CONTACT_EMAIL = "hello@calchub.example";
+const CONTACT_EMAIL = "santoshdev300@gmail.com";
 
 export default function ContactPage() {
   return (

@@ -46,14 +46,47 @@ export default function PrivacyPage() {
 
         <h2>Cookies</h2>
         <p>
-          We use a single functional cookie to store the anonymous device ID described above. We
-          do not use tracking or advertising cookies.
+          We use a single functional cookie to store the anonymous device ID described above.
+          Third-party vendors, including Google, may also use cookies to serve ads on this site —
+          see &ldquo;Advertising&rdquo; below.
+        </p>
+
+        <h2>Advertising</h2>
+        <p>
+          This site may display ads served by Google AdSense and other third-party advertising
+          networks. These vendors, including Google, use cookies (such as the DoubleClick cookie)
+          to serve ads based on a user&apos;s prior visits to this website or other websites on the
+          internet. Google&apos;s use of advertising cookies enables it and its partners to serve
+          ads to you based on your visits to this site and/or other sites.
+        </p>
+        <p>
+          You can opt out of personalized advertising by visiting{" "}
+          <a
+            href="https://adssettings.google.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary underline underline-offset-2"
+          >
+            Google Ads Settings
+          </a>
+          , or opt out of a third-party vendor&apos;s use of cookies for personalized advertising
+          by visiting{" "}
+          <a
+            href="https://www.aboutads.info/choices"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary underline underline-offset-2"
+          >
+            aboutads.info/choices
+          </a>
+          .
         </p>
 
         <h2>Third parties</h2>
         <p>
-          We do not sell or share any data with third parties. If analytics are added in the
-          future, they will be privacy-respecting and aggregate only.
+          Other than the advertising vendors described above, we do not sell or share any data
+          with third parties. If analytics are added in the future, they will be
+          privacy-respecting and aggregate only.
         </p>
 
         <h2>Contact</h2>

@@ -8,5 +8,5 @@ export const HISTORY_STORAGE_KEY_PREFIX = "cc:history:";
 export const MAX_RECENT_TOOLS = 20;
 export const MAX_HISTORY_ENTRIES = 20;
 
-export const SITE_NAME = "CalcHub";
+export const SITE_NAME = "QuickConvo";
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
