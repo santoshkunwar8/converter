@@ -38,9 +38,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const converterPages: MetadataRoute.Sitemap = getAllConverters().map((conv) => ({
     url: `${SITE_URL}${getToolHref({ type: "converter", slug: conv.slug, category: "converters" })}`,
     lastModified,
-    // Currency's content (exchange rates) genuinely changes hourly; every other
+    // Currency's content (exchange rates) genuinely changes daily; every other
     // converter's math is fixed, so "monthly" better reflects real edit frequency.
-    changeFrequency: conv.kind === "currency" ? "hourly" : "monthly",
+    changeFrequency: conv.kind === "currency" ? "daily" : "monthly",
     priority: 0.8,
   }));
 

@@ -141,7 +141,15 @@ export function CurrencyConverterShell({
           </p>
         )}
         <p className="mt-1 text-xs text-muted-foreground">
-          Rates as of {rates.date}, relative to {rates.base}. Updated hourly.
+          Rates as of {rates.date}, relative to {rates.base}.{" "}
+          <a
+            href="https://www.exchangerate-api.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-2 hover:text-foreground"
+          >
+            Rates by ExchangeRate-API
+          </a>
         </p>
 
         <div className="mt-5 flex flex-wrap gap-2" data-no-print="true">
