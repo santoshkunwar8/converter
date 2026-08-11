@@ -1,0 +1,64 @@
+// Prisma schema for anonymous, device-scoped persistence (favorites, recently
+// used tools, converter history). No user accounts — devices are identified
+// by a random id stored in a long-lived cookie (see src/lib/device.ts).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Device {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  favorites Favorite[]
+  recents   RecentTool[]
+  history   ConversionHistory[]
+}
+
+enum ToolType {
+  calculator
+  converter
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  deviceId  String
+  device    Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  toolSlug  String
+  toolType  ToolType
+  createdAt DateTime @default(now())
+
+  @@unique([deviceId, toolSlug, toolType])
+  @@index([deviceId])
+}
+
+model RecentTool {
+  id        String   @id @default(cuid())
+  deviceId  String
+  device    Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  toolSlug  String
+  toolType  ToolType
+  visitedAt DateTime @default(now())
+
+  @@unique([deviceId, toolSlug, toolType])
+  @@index([deviceId, visitedAt])
+}
+
+model ConversionHistory {
+  id            String   @id @default(cuid())
+  deviceId      String
+  device        Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  converterSlug String
+  fromUnit      String
+  toUnit        String
+  inputValue    Float
+  outputValue   Float
+  createdAt     DateTime @default(now())
+
+  @@index([deviceId, converterSlug, createdAt])
+}

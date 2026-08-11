@@ -1,69 +1,138 @@
-import Image from "next/image";
+import type { Metadata } from "next";
+import { Hero } from "@/components/home/hero";
+import { Section } from "@/components/home/section";
+import { ToolCard } from "@/components/shared/tool-card";
+import { CategoryCard } from "@/components/shared/category-card";
+import { FaqAccordion } from "@/components/shared/faq-accordion";
+import { EmptyState } from "@/components/shared/empty-state";
+import {
+  getAllCalculators,
+  getCalculatorsByCategory,
+  getPopularCalculators,
+  getRecentlyAddedCalculators,
+  toToolSummary as calcSummary,
+} from "@/lib/calculators/registry";
+import {
+  getAllConverters,
+  getPopularConverters,
+  getRecentlyAddedConverters,
+  toToolSummary as convSummary,
+} from "@/lib/converters/registry";
+import { CATEGORY_LIST } from "@/lib/categories";
+import { buildMetadata } from "@/lib/seo";
+import { SITE_NAME } from "@/lib/constants";
+import type { ToolSummary } from "@/types";
 
-export default function Home() {
+export const metadata: Metadata = buildMetadata({
+  title: `${SITE_NAME} — Free Online Calculators & Unit Converters`,
+  description:
+    "Hundreds of free, fast, and accurate calculators and unit converters for finance, health, education, math, and everyday life.",
+  path: "/",
+});
+
+const SITE_FAQ = [
+  {
+    question: `Is ${SITE_NAME} free to use?`,
+    answer: "Yes — every calculator and converter is completely free, with no sign-up required.",
+  },
+  {
+    question: "How accurate are the calculators?",
+    answer:
+      "Each tool uses standard, well-documented formulas (shown on every calculator page) and double-precision arithmetic. For financial, medical, or legal decisions, always confirm with a qualified professional.",
+  },
+  {
+    question: "Can I use these tools on mobile?",
+    answer: "Yes — every tool is fully responsive and works on phones, tablets, and desktops.",
+  },
+  {
+    question: "Do you store my data?",
+    answer:
+      "Favorites, recently used tools, and conversion history are saved locally in your browser. Optionally, this can sync anonymously via a device ID with no account or personal information required.",
+  },
+];
+
+export default function HomePage() {
+  const allCalculators = getAllCalculators();
+  const allConverters = getAllConverters();
+  const toolCount = allCalculators.length + allConverters.length;
+
+  const popularCalculators = getPopularCalculators(8).map(calcSummary);
+  const popularConverters = getPopularConverters(8).map(convSummary);
+
+  const recentlyAdded: ToolSummary[] = [
+    ...getRecentlyAddedCalculators(4).map(calcSummary),
+    ...getRecentlyAddedConverters(4).map(convSummary),
+  ].slice(0, 8);
+
+  const featured: ToolSummary[] = [...popularCalculators.slice(0, 2), ...popularConverters.slice(0, 2)];
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
+    <>
+      <Hero toolCount={toolCount} />
+
+      <Section title="Popular Calculators" viewAllHref="/calculators">
+        {popularCalculators.length > 0 ? (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {popularCalculators.map((tool) => (
+              <ToolCard key={tool.slug} tool={tool} />
+            ))}
+          </div>
+        ) : (
+          <EmptyState title="More calculators coming soon" />
+        )}
+      </Section>
+
+      <Section title="Popular Converters" viewAllHref="/converters">
+        {popularConverters.length > 0 ? (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {popularConverters.map((tool) => (
+              <ToolCard key={tool.slug} tool={tool} />
+            ))}
+          </div>
+        ) : (
+          <EmptyState title="More converters coming soon" />
+        )}
+      </Section>
+
+      <Section title="Browse by Category" description="Find tools organized by what you're trying to do.">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {CATEGORY_LIST.map((category) => (
+            <CategoryCard
+              key={category.slug}
+              category={category}
+              count={
+                category.slug === "converters"
+                  ? allConverters.length
+                  : getCalculatorsByCategory(category.slug).length
+              }
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          ))}
         </div>
-      </main>
-    </div>
+      </Section>
+
+      {featured.length > 0 && (
+        <Section title="Featured Tools" description="A few of our favorites, hand-picked.">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {featured.map((tool) => (
+              <ToolCard key={`${tool.type}-${tool.slug}`} tool={tool} />
+            ))}
+          </div>
+        </Section>
+      )}
+
+      {recentlyAdded.length > 0 && (
+        <Section title="Recently Added">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {recentlyAdded.map((tool) => (
+              <ToolCard key={`${tool.type}-${tool.slug}`} tool={tool} />
+            ))}
+          </div>
+        </Section>
+      )}
+
+      <Section title="Frequently Asked Questions">
+        <FaqAccordion faqs={SITE_FAQ} />
+      </Section>
+    </>
   );
 }
