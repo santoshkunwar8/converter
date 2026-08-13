@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Poppins, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -34,8 +35,14 @@ export const metadata: Metadata = {
     "Hundreds of free, fast, and accurate calculators and unit converters for finance, health, education, math, and everyday life.",
   applicationName: SITE_NAME,
   // Favicon/apple-icon are auto-detected from icon.tsx/apple-icon.tsx/favicon.ico.
-  // Fill in real IDs here once you register the site with each console:
-  // verification: { google: "...", other: { "msvalidate.01": "..." } },
+  // OG/Twitter share image is auto-detected from opengraph-image.tsx.
+  twitter: { card: "summary_large_image" },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    ...(process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION
+      ? { other: { "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION } }
+      : {}),
+  },
 };
 
 export const viewport: Viewport = {
@@ -67,6 +74,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </TooltipProvider>
           <Toaster />
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
